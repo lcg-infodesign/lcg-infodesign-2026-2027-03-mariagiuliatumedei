@@ -13,8 +13,12 @@ const AREE = [
 const COL_USO  = ["#ffffff", "#f0e6a0", "#f7e03c"]; // <2h, 2-4h, >4h
 const COL_RISP = ["#e8c94f", "#eeb26a", "#ff8a1f"]; // <1h, 1-2h, >2h
 
+const TITOLO = "AI: usage and impact on professional";
+const SOTTOTITOLO = "The three hourglasses show how AI is used by workers and how it affects them. " +
+                    "Hover over each hourglass to see which job positions were studied.";
+
 // geometria (calcolata da calcolaMisure in base alla finestra)
-let W, TOP, BASSO, MID, X0, PASSO, S;
+let W, TOP, BASSO, MID, X0, PASSO, S, R;
 
 async function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -44,15 +48,17 @@ function leggiDati() {
 }
 
 function calcolaMisure() {
-  S = windowWidth / 1422;                 // fattore di scala per testi e pallini
-  W = windowWidth * 0.26;                 // larghezza clessidra
-  X0 = windowWidth * 0.07;
-  PASSO = (windowWidth - 2 * X0 - W) / 2; // distanza tra le clessidre
-  TOP = windowHeight * 0.24;
-  BASSO = windowHeight * 0.72;
+  S = windowWidth / 1422;                     // fattore di scala
+  TOP = windowHeight * 0.30;                  // fascia alta libera per titolo e legenda
+  BASSO = windowHeight * 0.74;
   MID = (TOP + BASSO) / 2;
+  W = min(windowWidth * 0.21, (BASSO - TOP) * 0.55);   // clessidre più piccole
+  X0 = (windowWidth - 3 * W) / 4;             // 4 margini uguali
+  PASSO = W + X0;
+  R = 3.6 * max(S, 0.6);                        // raggio unico dei pallini
 }
 
+// ---------- COSTRUZIONE CLESSIDRE ----------
 function creaClessidre() {
   calcolaMisure();
   clessidre = [];
@@ -62,13 +68,24 @@ function creaClessidre() {
     let membri = lavoratori.filter(l => l.area === AREE[i].csv);
     let c = { x: x, cx: x + W / 2, nome: AREE[i].nome, pallini: [], ruoli: [] };
 
+    // ruoli unici, in ordine alfabetico
     for (let m of membri) if (!c.ruoli.includes(m.ruolo)) c.ruoli.push(m.ruolo);
     c.ruoli.sort();
 
-    for (let m of membri) {
-      if (!isNaN(m.uso))  nuovoPallino(c, m.uso,  COL_USO[fascia(m.uso, 2, 4)], true);
-      if (!isNaN(m.risp)) nuovoPallino(c, m.risp, COL_RISP[fascia(m.risp, 1, 2)], false);
-    }
+    // valori validi di ogni metà, in ordine crescente
+    let usi  = membri.filter(m => !isNaN(m.uso)).map(m => m.uso).sort((a, b) => a - b);
+    let risp = membri.filter(m => !isNaN(m.risp)).map(m => m.risp).sort((a, b) => a - b);
+
+    // prima i posti disponibili, poi i colori
+    let postiAlto  = postiDisponibili(c, true,  usi.length);
+    let postiBasso = postiDisponibili(c, false, risp.length);
+
+    for (let k = 0; k < usi.length && k < postiAlto.length; k++)
+      c.pallini.push({ x: postiAlto[k].x, y: postiAlto[k].y, col: COL_USO[fascia(usi[k], 2, 4)] });
+
+    for (let k = 0; k < risp.length && k < postiBasso.length; k++)
+      c.pallini.push({ x: postiBasso[k].x, y: postiBasso[k].y, col: COL_RISP[fascia(risp[k], 1, 2)] });
+
     clessidre.push(c);
   }
 }
@@ -79,47 +96,68 @@ function fascia(v, s1, s2) {
   return 2;
 }
 
-// cerca un punto libero dentro il vetro; se non lo trova, il pallino viene saltato
-function nuovoPallino(c, valore, colore, inAlto) {
-  let r = (2.5 + valore * 0.25) * max(S, 0.6);
+// Elenco dei posti liberi dentro una metà del vetro.
+// I posti si raccolgono verso l'estremità lontana dal collo (come la sabbia):
+// in alto si parte dall'alto e si scende, in basso si parte dal fondo e si sale.
+// A parità di riga si va dall'esterno verso il centro.
+// La ricerca si ferma appena ha trovato "quanti" posti.
+function postiDisponibili(c, inAlto, quanti) {
   let met = (BASSO - TOP) / 2;
-  for (let t = 0; t < 300; t++) {
-    let y = inAlto
-      ? random(TOP + met * 0.30, MID - met * 0.10)
-      : random(MID + met * 0.55, BASSO - met * 0.06);
-    let hw = mezzaLarghezza(y) - r - 4;
-    if (hw < 0) continue;
-    let x = c.cx + random(-hw, hw);
-    if (c.pallini.every(p => dist(p.x, p.y, x, y) > p.r + r + 1)) {
-      c.pallini.push({ x: x, y: y, r: r, col: colore });
-      return;
+  let posti = [];
+  let passoY = R * 1.6;      // distanza verticale tra le righe di pallini
+  let passoX = R * 1.6;      // distanza orizzontale tra i pallini
+
+  if (inAlto) {
+    for (let y = MID - met * 0.92; y <= MID - met * 0.14; y += passoY) {
+      let hw = mezzaLarghezza(y) - R - 4;
+      if (hw < 0) continue;
+      for (let x = c.cx + hw; x >= c.cx - hw; x -= passoX) {
+        if (quanti && posti.length >= quanti) return posti;
+        if (libero(c, x, y, posti)) posti.push({ x: x, y: y });
+      }
+    }
+  } else {
+    for (let y = BASSO - met * 0.06; y >= MID + met * 0.14; y -= passoY) {
+      let hw = mezzaLarghezza(y) - R - 4;
+      if (hw < 0) continue;
+      for (let x = c.cx - hw; x <= c.cx + hw; x += passoX) {
+        if (quanti && posti.length >= quanti) return posti;
+        if (libero(c, x, y, posti)) posti.push({ x: x, y: y });
+      }
     }
   }
+  return posti;
 }
 
-// ---------- FORMA SINUOSA ----------
+// il posto è libero se non tocca il vetro né i pallini già messi
+function libero(c, x, y, posti) {
+  let ok = c.pallini.every(p => dist(p.x, p.y, x, y) > 2 * R + 3);
+  if (ok) ok = posti.every(p => dist(p.x, p.y, x, y) > 2 * R + 3);
+  return ok;
+}
+
+// ---------- FORMA ----------
 // distanza dal centro al bordo del vetro all'altezza y.
-// Collo sottile, bulbo tondo a goccia, calotta arrotondata.
+// Collo sottile, raccordo curvo, bulbo tondo, calotta arrotondata.
 function mezzaLarghezza(y) {
   let met = (BASSO - TOP) / 2;
   let u = constrain(abs(y - MID) / met, 0, 1);   // 0 = collo, 1 = estremità
   let maxW = W / 2;
-  let collo = W * 0.025;
-  let punto = 0.68;                               // dove il bulbo è più largo
+  let collo = W * 0.03;                          // metà larghezza del collo
+  let punto = 0.72;                              // altezza del punto più largo
   if (u <= punto) {
     let s = u / punto;
-    // potenza > 1: la curva parte tangente al collo, senza spigolo
-    return collo + (maxW - collo) * pow(sin(s * HALF_PI), 1.7);
+    return collo + (maxW - collo) * pow(sin(s * HALF_PI), 1.5);
   }
   let s = (u - punto) / (1 - punto);
-  return maxW * pow(cos(s * HALF_PI), 0.55);      // calotta tonda
+  return maxW * pow(cos(s * HALF_PI), 0.5);      // calotta tonda
 }
 
 // ---------- DISEGNO ----------
 function draw() {
   background("#132149");
   trovaSopra();
-  titolo();
+  testi();
   legenda();
   for (let i = 0; i < clessidre.length; i++) disegnaClessidra(clessidre[i], i);
   if (sopra >= 0) pannelloRuoli(clessidre[sopra]);
@@ -134,15 +172,16 @@ function trovaSopra() {
   }
 }
 
-function titolo() {
+function testi() {
   noStroke(); fill(255); textAlign(LEFT, TOP);
-  textSize(52 * S); text("AI", windowWidth * 0.07, windowHeight * 0.06);
-  textSize(34 * S); text("usage and impact on professional", windowWidth * 0.07, windowHeight * 0.06 + 55 * S);
+  textSize(52 * S); text(TITOLO, windowWidth * 0.07, windowHeight * 0.05);
+  textSize(15 * S); fill(190, 205, 235);
+  text(SOTTOTITOLO, windowWidth * 0.07, windowHeight * 0.05 + 68 * S, windowWidth * 0.5, 80 * S);
 }
 
 function legenda() {
-  let xc = windowWidth * 0.78;            // x dei cerchi
-  let y1 = windowHeight * 0.06;
+  let xc = windowWidth * 0.78;
+  let y1 = windowHeight * 0.05;
   let y2 = y1 + 106 * S;
   let passo = 21 * S;
   textSize(17 * S); noStroke(); fill(255);
@@ -163,7 +202,6 @@ function disegnaClessidra(c, i) {
   // le altre clessidre si attenuano quando una è sotto il mouse
   let alpha = (sopra === -1 || sopra === i) ? 255 : 60;
 
-  // contorno chiuso: lato destro dall'alto al basso, poi lato sinistro dal basso all'alto
   noFill(); stroke(255, alpha); strokeWeight(3 * max(S, 0.6));
   beginShape();
   for (let y = TOP; y <= BASSO; y += 3) vertex(c.cx + mezzaLarghezza(y), y);
@@ -175,14 +213,14 @@ function disegnaClessidra(c, i) {
     let col = color(p.col);
     col.setAlpha(alpha);
     fill(col);
-    circle(p.x, p.y, p.r * 2);
+    circle(p.x, p.y, R * 2);
   }
 
   fill(255, alpha); textSize(17 * S); textAlign(CENTER, TOP);
   text(c.nome, c.cx, BASSO + 22 * S);
 }
 
-// pannello fisso in basso con tutti i ruoli, sempre dentro la finestra
+// pannello in basso con tutti i ruoli, sempre dentro la finestra
 function pannelloRuoli(c) {
   let x = X0;
   let w = windowWidth - 2 * X0;
@@ -198,6 +236,5 @@ function pannelloRuoli(c) {
   text(c.nome.replace("\n", " ") + " – " + c.ruoli.length + " ruoli", x + 15, y + 10);
 
   textStyle(NORMAL); textSize(13 * S); fill(210, 220, 245);
-  // con 4 argomenti il testo va a capo dentro il rettangolo
   text(c.ruoli.join("  ·  "), x + 15, y + 12 + 22 * S, w - 30, h - 20 - 22 * S);
 }
