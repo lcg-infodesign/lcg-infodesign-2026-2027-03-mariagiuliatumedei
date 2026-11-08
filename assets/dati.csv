@@ -1,0 +1,119 @@
+AI_Usage_and_Impact_on_Students_and_Professionals
+User_ID;Profession;AI_Purpose;AI_Usage_Hours_Per_Day;Time_Saved_Hours_Per_Week;Work_or_Study_Hours_Per_Day;Time_Saved_Hours_Per_day;macroarea
+U0186;Academic Research Professor and Technical Writer;Writing;4;5;5.9;1;Marketing, Comunicazione & Content Creation
+U0026;Administrative Assistant;Office Work;4;6;7.6;1,2;Marketing, Comunicazione & Content Creation
+U0131;Administrative Assistant;Office Work;5;12;9.3;2,4;Marketing, Comunicazione & Content Creation
+U0192;Administrative Assistant;Office Work;10;16;8.5;3,2;Marketing, Comunicazione & Content Creation
+U0242;Administrative Assistant;Office Work;5;12;7.8;2,4;Marketing, Comunicazione & Content Creation
+U0195;Administrative Executive;Office Work;1;1;8.5;0,2;Customer Support, Operazioni & Amministrazione
+U0161;AI Customer Support Specialist;Customer Support;2;1;7.6;0,2;Customer Support, Operazioni & Amministrazione
+U0176;AI-Powered Customer Support Executive;Customer Support;1;0;7.3;0;Customer Support, Operazioni & Amministrazione
+U0147;Analista de Dados;Data Analysis;3;4;9.2;0,8;Tech, sviluppo & data
+U0168;Analista de Dados Sênior;Data Analysis;2;;7.7;0;Tech, sviluppo & data
+U0220;Assistente Administrativo;Office Work;4;6;10;1,2;Customer Support, Operazioni & Amministrazione
+U0115;Business Analyst;Office Work;3;0;10.7;0;Business, Strategy & Managment
+U0269;Business Analyst;Office Work;2;4;7.3;0,8;Business, Strategy & Managment
+U0283;Business Analyst;Data Analysis;2;2;8;0,4;Business, Strategy & Managment
+U0181;Content Manager;Content Creation;1;3;7.3;0,6;Marketing, Comunicazione & Content Creation
+U0190;Content Manager;Content Creation;3;6;7.5;1,2;Marketing, Comunicazione & Content Creation
+U0111;Content Marketing Manager;Writing;1;2;9.1;0,4;Marketing, Comunicazione & Content Creation
+U0018;Content Strategist;Writing;2;5;10.5;1;Marketing, Comunicazione & Content Creation
+U0145;Content Strategist;Writing;1;5;9;1;Marketing, Comunicazione & Content Creation
+U0095;Content Strategist & Technical Writer;Writing;1;5;9.7;1;Marketing, Comunicazione & Content Creation
+U0005;Content Strategy Manager;Content Creation;5;11;9.5;2,2;Marketing, Comunicazione & Content Creation
+U0036;Content Strategy Manager;Writing;8;17;7.4;3,4;Marketing, Comunicazione & Content Creation
+U0010;Content Writer;Writing;3;10;7.2;2;Marketing, Comunicazione & Content Creation
+U0050;Content Writer;Writing;5;7;9.3;1,4;Marketing, Comunicazione & Content Creation
+U0075;Content Writer;Writing;6;5;6.7;1;Marketing, Comunicazione & Content Creation
+U0086;Content Writer;Writing;3;8;9.6;1,6;Marketing, Comunicazione & Content Creation
+U0150;Content Writer;Writing;3;7;8.9;1,4;Marketing, Comunicazione & Content Creation
+U0155;Content Writer;Writing;5;12;7.8;2,4;Marketing, Comunicazione & Content Creation
+U0265;Content Writer;Writing;2;3;10.3;0,6;Marketing, Comunicazione & Content Creation
+U0285;Content Writer;Writing;5;12;6.9;2,4;Marketing, Comunicazione & Content Creation
+U0237;Customer Experience Manager;Customer Support;1;5;9.7;5;Customer Support, Operazioni & Amministrazione
+U0256;Customer Service Executive;Customer Support;6;;6.6;0;Customer Support, Operazioni & Amministrazione
+U0059;Customer Service Representative;Customer Support;1;3;6.7;0,6;Customer Support, Operazioni & Amministrazione
+U0059;Customer Service Representative;Customer Support;2;3;6.7;0,6;Customer Support, Operazioni & Amministrazione
+U0110;Customer Support Executive;Customer Support;1;4;7.1;0,8;Customer Support, Operazioni & Amministrazione
+U0106;Customer Support Manager;Customer Support;1;5;5.9;1;Customer Support, Operazioni & Amministrazione
+U0254;Customer Support Manager;Customer Support;2;4;8.6;0,8;Customer Support, Operazioni & Amministrazione
+U0254;Customer Support Manager;Customer Support;2;4;8.6;0,8;Customer Support, Operazioni & Amministrazione
+U0217;Customer Support Specialist;Customer Support;6;12;8.04;2,4;Customer Support, Operazioni & Amministrazione
+U0243;Customer Support Specialist;Customer Support;5;12;8.7;2,4;Customer Support, Operazioni & Amministrazione
+U0253;Customer Support Specialist;Customer Support;10;15;11.6;3;Customer Support, Operazioni & Amministrazione
+U0193;Customer Support Specialist / AI Support Operations Manager;Customer Support;1;3;8.7;0,6;Customer Support, Operazioni & Amministrazione
+U0035;Data Analyst;Data Analysis;4;12;7.06;2,4;Tech, sviluppo & data
+U0231;Data Analyst;Data Analysis;2;2;8;0,4;Tech, sviluppo & data
+U0274;Data Analyst;Data Analysis;3;4;9.2;0,8;Tech, sviluppo & data
+U0247;Data Analyst / Business Intelligence Specialist;Data Analysis;4;5;6.7;1;Tech, sviluppo & data
+U0088;Data Entry Operator;Data Analysis;1;4;10.5;0,8;Customer Support, Operazioni & Amministrazione
+U0171;Data Entry Specialist;Data Analysis;5;6;8.07;1,2;Customer Support, Operazioni & Amministrazione
+U0058;Datenanalyst;Data Analysis;2;1;6.2;0,2;Tech, sviluppo & data
+U0136;Desenvolvedor de Sistemas (Systems Developer);Coding;5;12;8.4;2,4;Tech, sviluppo & data
+U0218;Desenvolvedor de Sistemas Junior;Coding;4;7;7.5;1,4;Tech, sviluppo & data
+U0061;Desenvolvedor de Software Sênior;Coding;1;1;10.2;0,2;Tech, sviluppo & data
+U0257;Desenvolvedora de Sistemas Júnior;Coding;5;8;8.8;1,6;Tech, sviluppo & data
+U0203;Desenvolvedora de Software;Coding;2;6;7.3;1,2;Tech, sviluppo & data
+U0264;Desenvolvedora de Software / Software Developer;Coding;2;6;9.6;1,2;Tech, sviluppo & data
+U0246;Développeur Full Stack;Coding;1;6;6.4;1,2;Tech, sviluppo & data
+U0012;Développeur Full Stack Junior;Coding;5;9;6.1;1,8;Tech, sviluppo & data
+U0019;Développeur Logiciel (Software Developer);Coding;2;3;9.5;0,6;Tech, sviluppo & data
+U0209;Digital Content Creator;Content Creation;2;5;7.8;1;Marketing, Comunicazione & Content Creation
+U0169;Digital Content Creator / Social Media Manager;Content Creation;2;4;6.7;0,8;Marketing, Comunicazione & Content Creation
+U0108;Digital Content Strategist;Content Creation;1;3;9.9;0,6;Marketing, Comunicazione & Content Creation
+U0139;Digital Content Writer;Content Creation;8;16;7.4;3,2;Marketing, Comunicazione & Content Creation
+U0124;Digital Marketing Manager;Content Creation;2;5;9.5;1;Marketing, Comunicazione & Content Creation
+U0259;Engenheiro de Software Sênior / Tech Lead;Coding;1;0;10.1;0;Tech, sviluppo & data
+U0286;Especialista em Atendimento ao Cliente com IA;Customer Support;2;5;8.6;1;Customer Support, Operazioni & Amministrazione
+U0233;Gerente de Atendimento ao Cliente;Customer Support;2;1;7.1;0,2;Customer Support, Operazioni & Amministrazione
+U0002;Junior Software Developer;Coding;1;2;9.5;0,4;Tech, sviluppo & data
+U0021;Junior Software Developer;Coding;3;8;7.8;1,6;Tech, sviluppo & data
+U0049;Junior Software Developer;Coding;;15;11.3;3;Tech, sviluppo & data
+U0013;Junior Web Developer;Coding;6;13;6.6;2,6;Tech, sviluppo & data
+U0056;Junior Web Developer;Coding;2;5;8.3;1;Tech, sviluppo & data
+U0230;Kundenbetreuerin mit KI-Unterstützung;Customer Support;1;7;7.6;1,4;Customer Support, Operazioni & Amministrazione
+U0198;Kundenservice-Spezialistin / Customer Service Specialist;Customer Support;1;3;8;0,6;Customer Support, Operazioni & Amministrazione
+U0223;Marketing Communications Officer;Writing;2;6;11;1,2;Marketing, Comunicazione & Content Creation
+U0094;Multimedia Content Producer;Content Creation;1;1;10.9;0,2;Marketing, Comunicazione & Content Creation
+U0179;Pesquisador de Mercado;Research;1;5;8.1;1;Marketing, Comunicazione & Content Creation
+U0126;Pesquisador Sênior em Inteligência Artificial e Ciência de Dados;Research;2;2;8.3;0,4;Tech, sviluppo & data
+U0159;Projektmanagerin (Project Manager);Office Work;2;6;6.6;1,2;Marketing, Comunicazione & Content Creation
+U0135;Research Analyst;Research;3;6;8.7;1,2;Tech, sviluppo & data
+U0074;Research Assistant;Research;1;2;6.8;0,4;Tech, sviluppo & data
+U0081;Research Assistant;Research;2;2;7.7;0,4;Tech, sviluppo & data
+U0252;Research Scientist;Research;6;13;9;2,6;Tech, sviluppo & data
+U0164;Research Scientist/Senior Research Officer;Research;1;1;7.9;0,2;Tech, sviluppo & data
+U0046;Research Technician;Research;23;5;9.5;1;Tech, sviluppo & data
+U0282;Research Technician;Research;3;6;8.6;1,2;Tech, sviluppo & data
+U0235;Senior Content Strategist;Writing;0;1;7.09;0,2;Marketing, Comunicazione & Content Creation
+U0248;Senior Content Strategist;Content Creation;2;2;11.2;0,4;Marketing, Comunicazione & Content Creation
+U0083;Senior Data Scientist;Data Analysis;5;10;12.4;2;Tech, sviluppo & data
+U0194;Senior Data Scientist;Data Analysis;1;1;8.3;0,2;Tech, sviluppo & data
+U0107;Senior Machine Learning Engineer;Coding;1;2;8.4;0,4;Tech, sviluppo & data
+U0180;Senior Research Scientist;Data Analysis;6;13;7.9;2,6;Tech, sviluppo & data
+U0236;Senior Research Scientist;Research;2;6;7.5;1,2;Tech, sviluppo & data
+U0151;Senior Software Developer;Coding;5;8;6.4;1,6;Tech, sviluppo & data
+U0151;Senior Software Developer;Coding;5;8;6.4;1,6;Tech, sviluppo & data
+U0279;Senior Software Developer;Coding;2;4;8.1;0,8;Tech, sviluppo & data
+U0279;Senior Software Developer;Coding;2;4;8.1;0,8;Tech, sviluppo & data
+U0055;Senior Software Engineer;Coding;4;9;7.4;1,8;Tech, sviluppo & data
+U0055;Senior Software Engineer;Coding;4;9;7.4;1,8;Tech, sviluppo & data
+U0239;Senior Software Engineer;Coding;1;5;6.4;1;Tech, sviluppo & data
+U0255;Senior Software Engineer;Coding;4;7;8.1;1,4;Tech, sviluppo & data
+U0184;Senior Software Engineer / AI Solutions Architect;Coding;2;3;7.8;0,6;Tech, sviluppo & data
+U0204;Senior Software Engineer / AI Systems Developer;Coding;1;2;10.4;0,4;Tech, sviluppo & data
+U0288;Senior Software Engineer / Technical Lead;Coding;4;5;10.1;1;Tech, sviluppo & data
+U0177;Social Media Content Creator;Content Creation;2;3;6.4;0,6;Tech, sviluppo & data
+U0226;Social Media Content Creator / Digital Marketer;Content Creation;1;3;11.6;0,6;Tech, sviluppo & data
+U0022;Software Developer;Coding;1;3;6.4;0,6;Tech, sviluppo & data
+U0114;Software Developer;Coding;1;1;8;0,2;Tech, sviluppo & data
+U0130;Software Developer;Coding;3;6;8.2;1,2;Tech, sviluppo & data
+U0144;Software Developer;Coding;2;6;5.1;1,2;Tech, sviluppo & data
+U0173;Software Developer;Coding;2;2;6.7;0,4;Tech, sviluppo & data
+U0249;Software Developer;Coding;4;6;8.4;1,2;Tech, sviluppo & data
+U0271;Software Developer;Coding;1;1;12;0,2;Tech, sviluppo & data
+U0128;Software Developer (Diploma Qualified);Coding;1;3;9.5;0,6;Tech, sviluppo & data
+U0200;Software Support Technician;Coding;1;2;6.5;0,4;Tech, sviluppo & data
+U0270;Softwareentwickler (Software Developer);Coding;3;8;6.8;1,6;Tech, sviluppo & data
+U0284;Softwareentwicklerin (Software Developer);Coding;4;6;8.6;1,2;Tech, sviluppo & data
+U0082;Technical Writer;Writing;2;2;5.9;0,4;Marketing, Comunicazione & Content Creation
