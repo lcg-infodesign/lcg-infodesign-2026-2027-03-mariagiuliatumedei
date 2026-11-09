@@ -22,7 +22,12 @@ let gutter = 2;                    //spazio tra le barre
 
 //4 classi di colore 
 const SOGLIE = [8, 14, 20];
-const COLORI_CLASSI = ['#2f6fd0', '#f2e02a', '#e8892b', '#e0342b']; //freddo → caldo
+const COLORI_CLASSI = [
+  '#6a9fd8',   // blu cielo
+  '#f2c879',   // pesca dorato
+  '#f08a6c',   // corallo
+  '#c2456f'    // magenta prugna
+];
 
 async function setup() {
   createCanvas(windowWidth, windowHeight);
