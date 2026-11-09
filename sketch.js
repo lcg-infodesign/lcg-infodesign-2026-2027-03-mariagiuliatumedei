@@ -1,75 +1,57 @@
-// ─────────────────────────────────────────────────────────────
-//  Temperatura dei fiumi nel mondo
-//  Ogni barra va da min_temp a max_temp; il colore = fascia della media.
-//  Dataset: assets/data.csv  (100 fiumi)
-// ─────────────────────────────────────────────────────────────
+//Variabili
+let data;                    //dataset caricato
+let rivers = [];             //fiume
+let hovered = null;          //fiume sotto il cursore
 
-// ---- Costanti di configurazione -------------------------------------
-const CSV_URL = 'assets/data.csv';   // il CSV è nella cartella assets
+const CSV_URL = 'assets/data.csv';   
 
-const COL_BG        = '#12234a';   // blu notte
+const COL_BG        = '#12234a';   
+const COL_HOVER     = '#ffffff';   
+const COL_ASSI      = 'rgba(255,255,255,0.10)';
 const COL_TESTI     = '#ffffff';
-const COL_BARRA_HOV = '#ffffff';   // bordo bianco della barra sotto il cursore
+const COL_TESTI_2   = '#bec8e1';   //sottotitolo
 
-const TEMP_MIN_SCALA = -22;        // estremi dell'asse Y, con un po' di margine
-const TEMP_MAX_SCALA = 32;
+const TEMP_MIN = -22;              
+const TEMP_MAX = 32;
 
-const MARGINE_SOPRA    = 110;  // spazio per il titolo
-const MARGINE_SOTTO    = 120;  // spazio per la legenda
-const MARGINE_LATERALE = 40;
+//layout
+let margin = 40;
+let marginTop = 110;               //spazio sopra per il titolo
+let marginBottom = 120;            //spazio sotto per la legenda
+let gutter = 2;                    //spazio tra le barre
 
-// Soglie delle 4 classi di colore (sulla temperatura media)
+//4 classi di colore 
 const SOGLIE = [8, 14, 20];
-const COLORI_CLASSI = ['#2f6fd0', '#f2e02a', '#e8892b', '#e0342b']; // freddo → caldo
+const COLORI_CLASSI = ['#2f6fd0', '#f2e02a', '#e8892b', '#e0342b']; //freddo → caldo
 
-// ---- Stato globale --------------------------------------------------
-let tabella = null;      // la tabella caricata dal CSV
-let fiumi = [];          // array di oggetti, uno per fiume
-let barraSottoCursore = null;
-
-// ─────────────────────────────────────────────────────────────
-//  1. Caricamento del dataset
-// ─────────────────────────────────────────────────────────────
-function preload() {
-  tabella = loadTable(CSV_URL, 'csv', 'header');
-}
-
-function setup() {
+async function setup() {
   createCanvas(windowWidth, windowHeight);
   textFont('Helvetica, Arial, sans-serif');
-  preparaDati();
-}
 
-// Trasforma la tabella CSV in un array di oggetti puliti e ordinati.
-function preparaDati() {
-  fiumi = [];
-
-  if (!tabella) {
-    console.error('CSV non caricato: controlla che il file esista in ' + CSV_URL);
+  data = await loadTable(CSV_URL, ",", "header");
+  if (!data) {
+    console.error('CSV non trovato in ' + CSV_URL);
     return;
   }
 
-  for (let i = 0; i < tabella.getRowCount(); i++) {
-    const riga = tabella.getRow(i);
-    const min = Number(riga.get('min_temp'));
-    const max = Number(riga.get('max_temp'));
+  for (let rowNumber = 0; rowNumber < data.getRowCount(); rowNumber++) {
+    let min = data.getNum(rowNumber, "min_temp");
+    let max = data.getNum(rowNumber, "max_temp");
 
-    // righe incomplete o non numeriche vengono scartate in sicurezza
-    if (isNaN(min) || isNaN(max)) continue;
-
-    fiumi.push({
-      nome:       riga.get('name'),
-      continente: riga.get('continent'),
-      min:        min,
-      max:        max,
-      media:      (min + max) / 2
+    //info per ogni fiume
+    rivers.push({
+      nome: data.getString(rowNumber, "name"),
+      continente: data.getString(rowNumber, "continent"),
+      min: min,
+      max: max,
+      media: (min + max) / 2
     });
   }
 
-  // ordina dal fiume più freddo al più caldo: la griglia racconta un pattern
-  fiumi.sort((a, b) => a.media - b.media);
+  // Ordina dal fiume più freddo al più caldo: la sequenza racconta un pattern.
+  rivers.sort((a, b) => a.media - b.media);
 
-  console.log('fiumi caricati:', fiumi.length);   // deve dire 100
+  console.log('fiumi caricati:', rivers.length);   // deve dire 100
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -78,60 +60,70 @@ function preparaDati() {
 function draw() {
   background(COL_BG);
 
-  const area = {
-    x: MARGINE_LATERALE,
-    y: MARGINE_SOPRA,
-    w: width - MARGINE_LATERALE * 2,
-    h: height - MARGINE_SOPRA - MARGINE_SOTTO
-  };
+  // Se i dati non sono ancora pronti, esci senza disegnare.
+  if (rivers.length === 0) return;
+
+  // Sottrae margini e gutter dalla larghezza per mantenere tutto il grafico dentro il canvas.
+  let areaX = margin;
+  let areaY = marginTop;
+  let areaW = width - 2 * margin;
+  let areaH = height - marginTop - marginBottom;
 
   disegnaTitolo();
-  calcolaBarre(area);
-  aggiornaBarraSottoCursore();
+  calcolaBarre(areaX, areaY, areaW, areaH);
+  aggiornaFiumeSottoCursore();
   disegnaBarre();
-  disegnaEtichetteAsse(area);
-  disegnaLegenda(area);
+  disegnaRiferimenti(areaX, areaY, areaW, areaH);
+  disegnaLegenda(areaX, areaY, areaW, areaH);
   disegnaTooltip();
 }
 
 function disegnaTitolo() {
   noStroke();
-  fill(COL_TESTI);
   textAlign(LEFT, TOP);
 
+  fill(COL_TESTI);
   textSize(34);
   textStyle(BOLD);
-  text('Temperatura dei fiumi nel mondo', MARGINE_LATERALE, 34);
+  text('Temperatura dei fiumi nel mondo', margin, 34);
 
   textSize(15);
   textStyle(NORMAL);
-  fill(190, 200, 225);
+  fill(COL_TESTI_2);
   text('Ogni barra va dalla temperatura minima alla massima del bacino; il colore indica la fascia climatica della media.',
-       MARGINE_LATERALE, 78);
+       margin, 78);
 }
 
-// Converte una temperatura in una coordinata Y dello schermo.
-function tempToY(t, area) {
-  return map(t, TEMP_MIN_SCALA, TEMP_MAX_SCALA, area.y + area.h, area.y);
+// map() trasforma i dati in dimensioni visive: qui temperatura → coordinata Y.
+function tempToY(t, areaY, areaH) {
+  return map(t, TEMP_MIN, TEMP_MAX, areaY + areaH, areaY);
 }
 
-// Calcola posizione e larghezza di ogni barra (nessun disegno qui).
-function calcolaBarre(area) {
-  const passo = area.w / fiumi.length;   // 100 fiumi → barre sottili e regolari
-  const larghezza = passo * 0.6;         // 60% del passo lascia aria tra le barre
+// Calcola posizione, altezza e colore di ogni barra (nessun disegno qui).
+function calcolaBarre(areaX, areaY, areaW, areaH) {
+  // Sottrae i gutter: una barra per fiume, uno spazio tra ogni coppia.
+  let numberOfGutters = rivers.length - 1;
+  let barsWidth = areaW - numberOfGutters * gutter;
+  let barWidth = barsWidth / rivers.length;
 
-  fiumi.forEach((fiume, i) => {
-    const centro = area.x + passo * (i + 0.5);
-    fiume.x = centro - larghezza / 2;
-    fiume.larghezza = larghezza;
-    fiume.yAlto = tempToY(fiume.max, area);
-    fiume.yBasso = tempToY(fiume.min, area);
-    fiume.altezza = fiume.yBasso - fiume.yAlto;
-    fiume.colore = colorePerMedia(fiume.media);
-  });
+  let xPos = areaX;
+
+  // Ogni riga del CSV diventa una barra del grafico.
+  for (let i = 0; i < rivers.length; i++) {
+    let r = rivers[i];
+    r.x = xPos;
+    r.w = barWidth;
+    r.yTop = tempToY(r.max, areaY, areaH);      // la barra parte dalla temperatura massima
+    r.yBottom = tempToY(r.min, areaY, areaH);   // e finisce alla minima
+    r.h = r.yBottom - r.yTop;
+    r.colore = colorePerMedia(r.media);
+
+    // Sposta la prossima barra dopo quella corrente, lasciando il gutter tra le due.
+    xPos += barWidth + gutter;
+  }
 }
 
-// Restituisce il colore della classe di appartenenza della media.
+// Associa una temperatura media a una delle 4 classi di colore.
 function colorePerMedia(media) {
   let indice = 0;
   for (let i = 0; i < SOGLIE.length; i++) {
@@ -142,82 +134,87 @@ function colorePerMedia(media) {
 
 function disegnaBarre() {
   noStroke();
-  fiumi.forEach(fiume => {
-    fill(fiume.colore);
-    rect(fiume.x, fiume.yAlto, fiume.larghezza, fiume.altezza);
-  });
 
-  // evidenzia la barra sotto il cursore
-  if (barraSottoCursore) {
+  for (let r of rivers) {
+    fill(r.colore);
+    rect(r.x, r.yTop, r.w, r.h);
+  }
+
+  // Evidenzia con un bordo bianco la barra sotto il cursore.
+  if (hovered) {
     noFill();
-    stroke(COL_BARRA_HOV);
+    stroke(COL_HOVER);
     strokeWeight(2);
-    rect(barraSottoCursore.x, barraSottoCursore.yAlto,
-         barraSottoCursore.larghezza, barraSottoCursore.altezza);
+    rect(hovered.x, hovered.yTop, hovered.w, hovered.h);
     noStroke();
   }
 }
 
-// Alcune tacche di riferimento sulla sinistra: rendono leggibili le altezze.
-function disegnaEtichetteAsse(area) {
-  const valori = [-20, -10, 0, 10, 20, 30];
+// Qualche linea di riferimento: rende leggibili le altezze senza appesantire il grafico.
+function disegnaRiferimenti(areaX, areaY, areaW, areaH) {
+  let valori = [-20, -10, 0, 10, 20, 30];
+
   textSize(12);
   textAlign(RIGHT, CENTER);
 
-  valori.forEach(v => {
-    const y = tempToY(v, area);
-    if (y < area.y - 1 || y > area.y + area.h + 1) return;
+  for (let v of valori) {
+    let y = tempToY(v, areaY, areaH);
+    if (y < areaY - 1 || y > areaY + areaH + 1) continue;
 
-    stroke(255, 255, 255, 25);
+    stroke(COL_ASSI);
     strokeWeight(1);
-    line(area.x, y, area.x + area.w, y);
+    line(areaX, y, areaX + areaW, y);
     noStroke();
 
-    fill(190, 200, 225);
-    text(v + '°', area.x - 10, y);
-  });
-  noStroke();
+    fill(COL_TESTI_2);
+    text(v + '°', areaX - 10, y);
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
 //  3. Legenda a gradiente
 // ─────────────────────────────────────────────────────────────
-function disegnaLegenda(area) {
-  const larghezza = min(420, area.w * 0.5);
-  const altezza = 14;
-  const x = area.x;
-  const y = area.y + area.h + 46;
+function disegnaLegenda(areaX, areaY, areaW, areaH) {
+  let larghezza = min(420, areaW * 0.5);
+  let altezza = 14;
+  let x = areaX;
+  let y = areaY + areaH + 46;
 
-  // barra sfumata: interpola i 4 colori sulle soglie
-  const inizio = -20, fine = 30;
+  // Barra sfumata: una linea per ogni pixel, colorata secondo la temperatura.
+  let inizio = -20;
+  let fine = 30;
+
   for (let i = 0; i < larghezza; i++) {
-    const t = map(i, 0, larghezza, inizio, fine);
+    let t = map(i, 0, larghezza, inizio, fine);
     stroke(colorePerMedia(t));
     line(x + i, y, x + i, y + altezza);
   }
   noStroke();
 
-  // tacche e valori delle soglie
+  // Tacche e valori delle soglie.
   textSize(12);
   textAlign(CENTER, TOP);
-  SOGLIE.forEach(s => {
-    const px = map(s, inizio, fine, x, x + larghezza);
+
+  for (let s of SOGLIE) {
+    let px = map(s, inizio, fine, x, x + larghezza);
+
     stroke(COL_BG);
     strokeWeight(2);
     line(px, y, px, y + altezza + 5);
     noStroke();
-    fill(190, 200, 225);
-    text(s + '°', px, y + altezza + 8);
-  });
 
-  // etichette estreme
+    fill(COL_TESTI_2);
+    text(s + '°', px, y + altezza + 8);
+  }
+
+  // Etichette estreme.
   textAlign(LEFT, TOP);
   text(inizio + '°', x, y + altezza + 8);
   textAlign(RIGHT, TOP);
   text(fine + '°', x + larghezza, y + altezza + 8);
 
   textAlign(LEFT, TOP);
-  fill(255);
+  fill(COL_TESTI);
   textSize(13);
   text('Temperatura media del bacino', x, y - 22);
 }
@@ -225,39 +222,49 @@ function disegnaLegenda(area) {
 // ─────────────────────────────────────────────────────────────
 //  4. Interazione: hover
 // ─────────────────────────────────────────────────────────────
-function aggiornaBarraSottoCursore() {
-  barraSottoCursore = null;
+function aggiornaFiumeSottoCursore() {
+  hovered = null;
 
-  const dentroArea = mouseY > MARGINE_SOPRA && mouseY < height - MARGINE_SOTTO;
-  if (!dentroArea) return;
+  // Il puntatore deve trovarsi dentro l'area del grafico, non sopra il titolo o la legenda.
+  if (mouseY < marginTop || mouseY > height - marginBottom) return;
 
-  fiumi.forEach(fiume => {
-    const dentroY = mouseY >= fiume.yAlto && mouseY <= fiume.yBasso;
-    const dentroX = mouseX >= fiume.x && mouseX <= fiume.x + fiume.larghezza;
-    if (dentroY && dentroX) barraSottoCursore = fiume;
-  });
+  for (let r of rivers) {
+    // Verifica se il puntatore si trova dentro questa barra.
+    if (
+      mouseX >= r.x &&
+      mouseX <= r.x + r.w &&
+      mouseY >= r.yTop &&
+      mouseY <= r.yTop + r.h
+    ) {
+      hovered = r;
+      return;   // una sola barra alla volta: inutile continuare a cercare
+    }
+  }
 }
 
-// Etichetta ancorata al cursore: segue sempre il mouse.
+// Etichetta ancorata al cursore: sigue sempre il mouse.
 function disegnaTooltip() {
-  if (!barraSottoCursore) return;
+  if (!hovered) return;
 
-  const f = barraSottoCursore;
-  const righe = [
-    f.nome,
-    f.continente,
-    'min ' + f.min + '°   max ' + f.max + '°',
-    'media ' + f.media.toFixed(1) + '°'
+  let righe = [
+    hovered.nome,
+    hovered.continente,
+    'min ' + hovered.min + '°   max ' + hovered.max + '°',
+    'media ' + hovered.media.toFixed(1) + '°'
   ];
 
   textSize(13);
-  const padding = 10;
+  let padding = 10;
   let larghezza = 0;
-  righe.forEach(r => larghezza = max(larghezza, textWidth(r)));
-  larghezza += padding * 2;
-  const altezza = 18 * righe.length + padding * 2 - 4;
 
-  // tiene l'etichetta dentro la finestra
+  for (let r of righe) {
+    larghezza = max(larghezza, textWidth(r));
+  }
+  larghezza += padding * 2;
+
+  let altezza = 18 * righe.length + padding * 2 - 4;
+
+  // Offset dal puntatore, che si ribalta se l'etichetta uscirebbe dalla finestra.
   let x = mouseX + 16;
   let y = mouseY + 16;
   if (x + larghezza > width - 8) x = mouseX - larghezza - 16;
@@ -267,18 +274,18 @@ function disegnaTooltip() {
   fill(8, 18, 42, 235);
   rect(x, y, larghezza, altezza, 6);
 
-  stroke(f.colore);
+  stroke(hovered.colore);
   strokeWeight(2);
   noFill();
   rect(x, y, larghezza, altezza, 6);
   noStroke();
 
   textAlign(LEFT, TOP);
-  righe.forEach((r, i) => {
-    fill(255, 255, 255);
+  for (let i = 0; i < righe.length; i++) {
+    fill(COL_TESTI);
     textStyle(i === 0 ? BOLD : NORMAL);
-    text(r, x + padding, y + padding + i * 18);
-  });
+    text(righe[i], x + padding, y + padding + i * 18);
+  }
   textStyle(NORMAL);
 }
 
