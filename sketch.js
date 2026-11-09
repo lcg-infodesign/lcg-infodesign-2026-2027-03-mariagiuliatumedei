@@ -1,4 +1,4 @@
-//Variabili
+//variabili
 let data;                    //dataset caricato
 let rivers = [];             //fiume
 let hovered = null;          //fiume sotto il cursore
@@ -23,10 +23,10 @@ let gutter = 2;                    //spazio tra le barre
 //4 classi di colore 
 const SOGLIE = [8, 14, 20];
 const COLORI_CLASSI = [
-  '#6a9fd8',   // blu cielo
-  '#f2c879',   // pesca dorato
-  '#f08a6c',   // corallo
-  '#c2456f'    // magenta prugna
+  '#6a9fd8',   
+  '#f2c879',   
+  '#f08a6c',   
+  '#c2456f'    
 ];
 
 async function setup() {
@@ -92,7 +92,7 @@ function disegnaTitolo() {
   text('Each bar spans a river\'s minimum to maximum temperature. Color shows the average; rivers are sorted from coldest to warmest.', margin, 78);
 }
 
-//map() serve per trasforma i dati in dimensioni visive (la temperatura diventa la coordinata Y).
+//map() per trasforma i dati in dimensioni visive (la temperatura diventa la coordinata Y).
 function tempToY(t, areaY, areaH) {
   return map(t, TEMP_MIN, TEMP_MAX, areaY + areaH, areaY);
 }
@@ -134,7 +134,6 @@ function disegnaBarre() {
     rect(r.x, r.yTop, r.w, r.h);
   }
 
-  //bordo bianco della barra se si usa il cursore
   if (hovered) {
     noFill();
     stroke(COL_HOVER);
