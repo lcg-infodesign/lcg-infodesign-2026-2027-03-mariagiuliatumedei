@@ -89,7 +89,7 @@ function disegnaTitolo() {
   textSize(15);
   textStyle(NORMAL);
   fill(COL_TESTI_2);
-  text('From icy Siberian waters to tropical basins: each bar shows how far a river\'s temperature ranges.', margin, 78);
+  text('Each bar spans a river\'s minimum to maximum temperature. Color shows the average; rivers are sorted from coldest to warmest.', margin, 78);
 }
 
 //map() serve per trasforma i dati in dimensioni visive (la temperatura diventa la coordinata Y).
@@ -206,7 +206,7 @@ function disegnaLegenda(areaX, areaY, areaW, areaH) {
   textAlign(LEFT, TOP);
   fill(COL_TESTI);
   textSize(13);
-  text('Temperatura media del bacino', x, y - 22);
+  text('Average temperature', x, y - 22);
 }
 
 //hover
@@ -235,7 +235,7 @@ function disegnaTooltip() {
     hovered.nome,
     hovered.continente,
     'min ' + hovered.min + '°   max ' + hovered.max + '°',
-    'media ' + hovered.media.toFixed(1) + '°'
+    'avg ' + hovered.media.toFixed(1) + '°'
   ];
 
   textSize(13);
